@@ -11,7 +11,13 @@ def calculate_windchill(temp, wind):
 
 
 def main():
-    wind_chill = calculate_windchill(temperature, wind_speed)
+    wind_chill = calculate_windchill(10.0, 15)
+    print("Wind chill is {:.1f}".format(wind_chill))
+
+    wind_chill = calculate_windchill(0.0, 25)
+    print("Wind chill is {:.1f}".format(wind_chill))
+
+    wind_chill = calculate_windchill(-10.0, 35)
     print("Wind chill is {:.1f}".format(wind_chill))
 
     temp_str = input("Please enter the temperature: ")
