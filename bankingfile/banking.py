@@ -1,46 +1,28 @@
 #!/usr/bin/env python3
 
-
+import os
 import sys
-# Prompt user to enter a file name prefix
-# Generate two files prefix.old.txt and prefix.new.txt
-# catch file read errors
-
-
-
-# for each record in old master file
-# display customer information
-# account is 6 characters [0:6]
-# balance is 10 characters [7:17]
-# name is 27 at longest but can't use length [18:]
-# prompt for transaction related to customer
-# write the customer record to the new master file
-
-# program will recognize following transactions
-# deposit
-# withdrawal
-# close
-# advance to next customer
 
 def get_number(one_line):
-    # returns the account number
+    """returns the account number"""
     return one_line[:6]
 
 def get_balance(one_line):
-    # returns the account balance as a float
+    """returns the account balance as a float"""
     if len(one_line) > 17:
         return float(one_line[7:17].lstrip())
     else:
         return 0.00
 
 def get_name(one_line):
-    # returns the account holder's name as a string
+    """returns the account holder's name as a string"""
     if len(one_line) > 19:
         return one_line[18:].rstrip()
     else:
         return "(No Name)"
 
 def equal_floats(x, y):
+    """Compares two floats and returns boolean"""
     if x == y:
         return True
     else:
@@ -48,29 +30,40 @@ def equal_floats(x, y):
 
 def main():
     file_prefix = input("Enter file name prefix: ")
+    old_file = file_prefix + ".old.txt"
+    if os.path.isfile(old_file):
+        print("File exists")
+        new_file = file_prefix + ".new.txt"
+        infile = open(old_file, 'r')
+        ofile = open(new_file, 'w')
+    else:
+        print("{} does not exist".format(old_file))
+        sys.exit(0)
 
-    infile = open("sample.master.old.txt")
     line = infile.readline()
     print("{} ({}) ${}".format(get_name(line), get_number(line), get_balance(line)))
-    
+    new_balance = get_balance(line)
     while True:
         trans_code = input("Enter a command (a, c, d, w) ")
 
         if trans_code == 'd':
             deposit = input("Deposit amount: ")
-            new_balance = get_balance(line) + float(deposit)
+            new_balance = new_balance + float(deposit)
             print("New balance is ", new_balance)
         if trans_code == 'w':
             withdrawal = input("Withdrawal amount: ")
-            new_balance = get_balance(line) - float(withdrawal)
+            new_balance = new_balance - float(withdrawal)
             print("New balance is ", new_balance)
         if trans_code == 'c':
-            if get_balance(line) == 0:
+            if new_balance == 0:
                 print("Closing Account")
             else:
                 print("Account has a balance. Cannot close.")
         if trans_code == 'a':
+            new_entry = "{} {} {}".format(get_number, new_balance, get_name)
+            ofile.write(new_entry)
             line = infile.readline()
+            new_balance = get_balance(line)
             if get_number(line) == "999999":
                 print("End of File. Closing...")
                 sys.exit(0)
@@ -78,6 +71,7 @@ def main():
             continue
 
     infile.close()
+    ofile.close()
 
 
 if __name__ == '__main__':
