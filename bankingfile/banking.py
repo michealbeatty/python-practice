@@ -31,9 +31,11 @@ def equal_floats(x, y):
 def main():
     file_prefix = input("Enter file name prefix: ")
     old_file = file_prefix + ".old.txt"
+    new_file = file_prefix + ".new.txt"
+
     if os.path.isfile(old_file):
         print("File exists")
-        new_file = file_prefix + ".new.txt"
+
         infile = open(old_file, 'r')
         ofile = open(new_file, 'w')
     else:
@@ -60,7 +62,7 @@ def main():
             else:
                 print("Account has a balance. Cannot close.")
         if trans_code == 'a':
-            new_entry = "{} {} {}".format(get_number, new_balance, get_name)
+            new_entry = "{} {:.2f} {}\n".format(get_number(line), new_balance, get_name(line))
             ofile.write(new_entry)
             line = infile.readline()
             new_balance = get_balance(line)
